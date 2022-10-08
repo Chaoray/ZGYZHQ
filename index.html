@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中國語轉換器</title>
+    <style>
+        body>* {
+            margin: 0.5rem;
+        }
+    </style>
+    <script src="js/xml2json_min.js"></script>
+</head>
+
+<body>
+    <textarea name="" id="ZHNR" cols="30" rows="10">中國語轉換器</textarea>
+    <br>
+    <button id="ZH">ZH</button>
+    <br>
+    <p>結果:</p>
+    <span id="JG"></span>
+    <script>
+        const ZH_NR = document.getElementById('ZHNR');
+        const ZH_AN = document.getElementById('ZH');
+        const ZH_JG = document.getElementById('JG');
+        ZH_AN.addEventListener('click', () => {
+            fetch(`https://char.iis.sinica.edu.tw/API/pinyin_SQL.aspx?str=${encodeURI(ZH_NR.value)}&choose=4`)
+                .then((res) => {
+                    if (res.ok) return res.text();
+                })
+                .then((text) => {
+                    text = text.replace(/<!--([^(-->)]*)-->/gm, '');
+
+                    let spl = text.split(' ');
+                    let result = '';
+                    for (let i = 0; i < spl.length; i++) {
+                        if (spl[i] === '') continue;
+                        result += spl[i][0].toUpperCase();
+                    }
+                    ZH_JG.innerHTML = result;
+                });
+        });
+    </script>
+</body>
+
+</html>
